@@ -1,0 +1,4 @@
+haha 4 100
+hehe 100 4
+pipi 70 20
+gigi 60 50
