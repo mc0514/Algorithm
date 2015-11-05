@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from numpy import *
 def loadDataSet():
     dataMat=[];
@@ -12,7 +13,7 @@ def loadDataSet():
 def sigmoid(inX):
     return 1.0/(1+exp(-inX))
 
-
+#梯度上升
 def gradAscent(dataMatIn,classLabels):
     dataMatrix=mat(dataMatIn)
     labelMat=mat(classLabels).transpose()
@@ -27,13 +28,29 @@ def gradAscent(dataMatIn,classLabels):
     return weights
 
 
+#随机梯度上升
+def stocGradAscent1(dataMatrix,classLabels,numIter=150):
+    m,n=shape(dataMatrix)
+    
+    weights=ones(n)
+    for j in range(numIter):
+        dataIndex=range(m)
+        for i in range(m):
+            alpha=4/(1.0+j+i)+0.01
+            randIndex=int(random.uniform(0,len(dataIndex)))
+            h=sigmoid(sum(dataMatrix[randIndex]*weights))
+            error=classLabels[randIndex]-h
+            weights=weights+alpha*error*dataMatrix[randIndex]
+            del(dataIndex[randIndex])
+    return weights
+
 def plotBestFit(weights):
     import matplotlib.pyplot as plt
     dataMat,labelMat=loadDataSet()
     dataArr=array(dataMat)
     n=shape(dataArr)[0]
     xcord1=[];ycord1=[]
-    xcord2=[];ycode2=[]
+    xcord2=[];ycord2=[]
     for i in range(n):
         if int(labelMat[i])==1:
             xcord1.append(dataArr[i,1]);ycord1.append(dataArr[i,2])
@@ -48,3 +65,11 @@ def plotBestFit(weights):
     ax.plot(x,y)
     plt.xlabel('X1');plt.ylabel('X2');
     plt.show()
+
+
+
+
+dataArr,lableMat=loadDataSet()
+#weights=gradAscent(dataArr,lableMat)
+weights=stocGradAscent1(array(dataArr),lableMat)
+plotBestFit(weights)
